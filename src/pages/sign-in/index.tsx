@@ -14,6 +14,8 @@ import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import Fab from "@mui/material/Fab";
+import { useAppDispatch } from "../../app/hooks";
+import { logIn, logOut } from "../../app/authSlice";
 
 import { signIn } from "../../api/authenticate";
 
@@ -32,6 +34,7 @@ export default function SignIn() {
   const [isError, setIsError] = useState(false);
   const [errorText, setErrorText] = useState("");
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = async (event: any) => {
@@ -42,12 +45,15 @@ export default function SignIn() {
     const password = data.get("password") as string;
 
     const res: SignInResponse = await signIn(email, password);
-    console.log(res);
 
     if (!res.success) {
       setIsError(true);
       setErrorText(res.message);
-    } else return navigate("/");
+      dispatch(logOut());
+    } else {
+      dispatch(logIn());
+      navigate("/");
+    }
   };
 
   return (
