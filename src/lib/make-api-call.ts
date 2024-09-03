@@ -14,14 +14,26 @@ async function makeApiCall({
   const config: AxiosRequestConfig = {
     url,
     method,
-    data: body ? JSON.stringify(body) : null,
     headers: { "Content-Type": "application/json", ...headers },
     withCredentials: true,
   };
 
-  const response = await axios(config);
+  if (body) config.data = JSON.stringify(body);
 
-  return response.data;
+  try {
+    const response = await axios(config);
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data;
+    }
+
+    return {
+      success: false,
+      message: error,
+    };
+  }
 }
 
 export default makeApiCall;

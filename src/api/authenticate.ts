@@ -12,4 +12,12 @@ async function signIn(email: string, password: string) {
   return await makeApiCall({ body: { email, password }, method: "POST", url });
 }
 
-export { signUp, signIn };
+async function validateSession() {
+  const url = `${
+    import.meta.env.VITE_SERVER_ENDPOINT
+  }/v1/user/validate-session`;
+
+  return await makeApiCall({ method: "POST", url });
+}
+
+export { signUp, signIn, validateSession };

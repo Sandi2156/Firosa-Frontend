@@ -12,6 +12,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Chip from "@mui/material/Chip";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Alert from "@mui/material/Alert";
+import { useAppSelector } from "../../../app/hooks";
+import { useNavigate } from "react-router-dom";
 
 enum LogCode {
   DEPLOYMENT_INITIATED = "DEPLOYMENT_INITIATED",
@@ -49,8 +51,14 @@ export default function Hero() {
   const [message, setMessage] = useState<BuildLog>();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const navigate = useNavigate();
 
   const deploy = async () => {
+    if (!isAuthenticated) {
+      return navigate("/sign-in");
+    }
+
     if (!gitURL) {
       setErrorMessage("Give a Proper GitHub Project Link");
       return;

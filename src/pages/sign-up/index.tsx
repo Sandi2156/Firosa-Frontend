@@ -17,24 +17,6 @@ import Fab from "@mui/material/Fab";
 
 import { signUp } from "../../api/authenticate";
 
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
@@ -70,7 +52,7 @@ export default function SignUp() {
     if (!res.success) {
       setIsError(true);
       setErrorText(res.message);
-    } else return navigate("/signin");
+    } else return navigate("/sign-in");
   };
 
   return (
@@ -192,7 +174,19 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          align="center"
+          sx={{ mt: 5 }}
+        >
+          {"Copyright © "}
+          <Link color="inherit" href="https://mui.com/">
+            Your Website
+          </Link>{" "}
+          {new Date().getFullYear()}
+          {"."}
+        </Typography>
       </Container>
     </ThemeProvider>
   );
