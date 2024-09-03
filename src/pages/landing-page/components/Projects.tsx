@@ -33,7 +33,7 @@ const Item = styled(Paper)(({ theme }) => ({
 //   cursor: "pointer",
 // };
 
-interface ProjectCard {
+export interface ProjectCard {
   projectId: string;
   projectLink: string;
   projectName: string;

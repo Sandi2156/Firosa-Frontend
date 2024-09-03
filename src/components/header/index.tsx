@@ -1,4 +1,3 @@
-import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -8,10 +7,16 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useState } from "react";
 
-const Header = ({ isLoggedIn, onLogout }) => {
+const Header = ({
+  isLoggedIn,
+  onLogout,
+}: {
+  isLoggedIn: boolean;
+  onLogout: () => void;
+}) => {
   const [value, setValue] = useState(0);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (_event: object, newValue: number) => {
     setValue(newValue);
   };
 
