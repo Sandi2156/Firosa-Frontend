@@ -28,8 +28,6 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
   const [open, setOpen] = React.useState(false);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
-  console.log(isAuthenticated);
-
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
