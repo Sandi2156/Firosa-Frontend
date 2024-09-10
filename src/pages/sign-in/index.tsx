@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,8 +16,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import Fab from "@mui/material/Fab";
 import { useAppDispatch } from "../../app/hooks";
 import { logIn, logOut } from "../../app/authSlice";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
-import { signIn } from "../../api/authenticate";
+import { signIn, signUp } from "../../api/authenticate";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -33,6 +35,7 @@ type SignInResponse = {
 export default function SignIn() {
   const [isError, setIsError] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [oAuthUser, setOAuthUser] = useState<CredentialResponse>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -44,7 +47,7 @@ export default function SignIn() {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-    const res: SignInResponse = await signIn(email, password);
+    const res: SignInResponse = await signIn(email, password, "SELF");
 
     if (!res.success) {
       setIsError(true);
@@ -54,6 +57,45 @@ export default function SignIn() {
       dispatch(logIn());
       navigate("/");
     }
+  };
+
+  const signedInByGoogleOnSuccess = async (response: CredentialResponse) => {
+    if (!response.credential) {
+      setIsError(true);
+      setErrorText("Google Authentication Error!");
+
+      return;
+    }
+
+    const decodedString: {
+      email: string;
+      given_name: string;
+      family_name: string;
+    } = jwtDecode(response.credential);
+
+    await signUp(
+      decodedString.email,
+      "",
+      "GOOGLE",
+      decodedString.given_name,
+      decodedString.family_name
+    );
+
+    const res: SignInResponse = await signIn(decodedString.email, "", "GOOGLE");
+
+    if (!res.success) {
+      setIsError(true);
+      setErrorText(res.message);
+      dispatch(logOut());
+    } else {
+      dispatch(logIn());
+      navigate("/");
+    }
+  };
+
+  const signedInByGoogleOnError = () => {
+    setIsError(true);
+    setErrorText("Google Authentication Error!");
   };
 
   return (
@@ -135,6 +177,12 @@ export default function SignIn() {
             >
               Sign In
             </Button>
+
+            <GoogleLogin
+              onSuccess={signedInByGoogleOnSuccess}
+              onError={signedInByGoogleOnError}
+            />
+
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">

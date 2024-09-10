@@ -1,15 +1,31 @@
 import makeApiCall from "../lib/make-api-call";
 
-async function signUp(email: string, password: string) {
+type SignedUpBy = "SELF" | "GOOGLE";
+
+async function signUp(
+  email: string,
+  password: string,
+  signedUpBy: SignedUpBy,
+  firstName = "",
+  lastName = ""
+) {
   const url = `${import.meta.env.VITE_SERVER_ENDPOINT}/v1/user/signup`;
 
-  return await makeApiCall({ body: { email, password }, method: "POST", url });
+  return await makeApiCall({
+    body: { email, password, signedUpBy, firstName, lastName },
+    method: "POST",
+    url,
+  });
 }
 
-async function signIn(email: string, password: string) {
+async function signIn(email: string, password: string, signedUpBy: SignedUpBy) {
   const url = `${import.meta.env.VITE_SERVER_ENDPOINT}/v1/user/signin`;
 
-  return await makeApiCall({ body: { email, password }, method: "POST", url });
+  return await makeApiCall({
+    body: { email, password, signedUpBy },
+    method: "POST",
+    url,
+  });
 }
 
 async function validateSession() {
