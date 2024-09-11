@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -35,7 +35,6 @@ type SignInResponse = {
 export default function SignIn() {
   const [isError, setIsError] = useState(false);
   const [errorText, setErrorText] = useState("");
-  const [oAuthUser, setOAuthUser] = useState<CredentialResponse>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 

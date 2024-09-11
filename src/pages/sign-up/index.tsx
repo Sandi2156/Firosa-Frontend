@@ -47,7 +47,7 @@ export default function SignUp() {
       return;
     }
 
-    const res: SignUpResponse = await signUp(email, password);
+    const res: SignUpResponse = await signUp(email, password, "SELF");
 
     if (!res.success) {
       setIsError(true);
