@@ -20,13 +20,6 @@ import { signUp } from "../../api/authenticate";
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-type SignUpResponse = {
-  success: boolean;
-  message: string;
-  data: null;
-  errorCode?: string;
-};
-
 export default function SignUp() {
   const navigate = useNavigate();
   const [errorText, setErrorText] = useState("");
@@ -47,7 +40,7 @@ export default function SignUp() {
       return;
     }
 
-    const res: SignUpResponse = await signUp(email, password, "SELF");
+    const res = await signUp(email, password, "SELF");
 
     if (!res.success) {
       setIsError(true);

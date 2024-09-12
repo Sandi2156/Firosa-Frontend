@@ -12,4 +12,10 @@ async function deployProject(gitURL: string) {
   return await makeApiCall({ method: "POST", url, body: { gitURL } });
 }
 
-export { getProjects, deployProject };
+async function deleteProject(projectId: string) {
+  const url = `${import.meta.env.VITE_SERVER_ENDPOINT}/v1/project/delete`;
+
+  return await makeApiCall({ method: "POST", url, body: { projectId } });
+}
+
+export { getProjects, deployProject, deleteProject };

@@ -1,5 +1,12 @@
 import axios, { AxiosRequestConfig, Method } from "axios";
 
+interface ApiCallResponse {
+  success: boolean;
+  message: string;
+  data: null | object;
+  errorCode: string;
+}
+
 async function makeApiCall({
   method,
   url,
@@ -10,7 +17,7 @@ async function makeApiCall({
   url: string;
   body?: object;
   headers?: object;
-}) {
+}): Promise<ApiCallResponse> {
   const config: AxiosRequestConfig = {
     url,
     method,
@@ -31,7 +38,9 @@ async function makeApiCall({
 
     return {
       success: false,
-      message: error,
+      message: error as string,
+      data: null,
+      errorCode: "unknown_error",
     };
   }
 }

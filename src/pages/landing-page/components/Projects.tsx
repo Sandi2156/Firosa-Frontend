@@ -15,6 +15,9 @@ import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
+import { deleteProject } from "../../../api/project";
+import { useAppDispatch } from "../../../app/hooks";
+import { showSnackbar } from "../../../app/snackBarSlice";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -37,16 +40,32 @@ export interface ProjectCard {
   projectId: string;
   projectLink: string;
   projectName: string;
+  _id: string;
 }
 
 interface ProjectsProps {
   mode: PaletteMode;
   toggleColorMode: () => void;
   projects: Array<ProjectCard>;
+  loadProjects: () => void;
 }
 
 function Projects(props: ProjectsProps) {
-  const { projects } = props;
+  const { projects, loadProjects } = props;
+  const dispatch = useAppDispatch();
+
+  const onClickDelete = async (id: string) => {
+    const res = await deleteProject(id);
+
+    if (res.success) {
+      loadProjects();
+      dispatch(
+        showSnackbar({ message: "Project is deleted!", type: "success" })
+      );
+    } else {
+      dispatch(showSnackbar({ message: res.message, type: "error" }));
+    }
+  };
 
   return (
     <Box id="projects">
@@ -87,15 +106,6 @@ function Projects(props: ProjectsProps) {
         </Typography>
 
         <Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: "wrap" }}>
-          <Item>
-            <Typography>siccy slider</Typography>
-
-            <Stack direction="row" spacing={3}>
-              <Button>Open</Button>
-              {/* <Button>Delete</Button> */}
-            </Stack>
-          </Item>
-
           {projects.map((item) => (
             <Item>
               <Typography>{item.projectName}</Typography>
@@ -104,7 +114,7 @@ function Projects(props: ProjectsProps) {
                 <Button href={item.projectLink} target="_blank">
                   Open
                 </Button>
-                {/* <Button>Delete</Button> */}
+                <Button onClick={() => onClickDelete(item._id)}>Delete</Button>
               </Stack>
             </Item>
           ))}
